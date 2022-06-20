@@ -1,0 +1,2596 @@
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  ~ update in-place
+ <= read (data resources)
+
+Terraform will perform the following actions:
+
+  # module.dfs3.data.template_file.log_bucket_policy[0] will be read during apply
+  # (config refers to values not yet known)
+ <= data "template_file" "log_bucket_policy"  {
+      ~ id       = "689c05a6ea2234a48d9262b5f083671f2b729b5a74a27f35810598492a8f631a" -> (known after apply)
+      ~ rendered = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = "s3:*"
+                      - Condition = {
+                          - Bool = {
+                              - Aws:SecureTransport = "false"
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = {
+                          - AWS = "*"
+                        }
+                      - Resource  = [
+                          - "arn:aws:s3:::datafabric-s3-lg-pdfrb-5690/*",
+                          - "arn:aws:s3:::datafabric-s3-lg-pdfrb-5690",
+                        ]
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> (known after apply)
+        # (2 unchanged attributes hidden)
+    }
+
+  # module.dfs3.data.template_file.primary_bucket_policy[0] will be read during apply
+  # (config refers to values not yet known)
+ <= data "template_file" "primary_bucket_policy"  {
+      ~ id       = "5d13cf3603e4a060d247123bb816022c4cb908f51e07c2ddd96a959e1d0b6af5" -> (known after apply)
+      ~ rendered = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = "s3:PutObject"
+                      - Condition = {
+                          - StringNotEquals = {
+                              - s3:x-amz-server-side-encryption = "AES256"
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = "*"
+                      - Resource  = "arn:aws:s3:::datafabric-s3-pdfrb-5690/*"
+                      - Sid       = "DenyIncorrectEncryptionHeader"
+                    },
+                  - {
+                      - Action    = "s3:PutObject"
+                      - Condition = {
+                          - StringEquals = {
+                              - s3:x-amz-server-side-encryption = "true"
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = "*"
+                      - Resource  = "arn:aws:s3:::datafabric-s3-pdfrb-5690/*"
+                      - Sid       = "DenyUnEncryptedObjectUploads"
+                    },
+                  - {
+                      - Action    = "s3:*"
+                      - Condition = {
+                          - Bool = {
+                              - Aws:SecureTransport = "false"
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = "*"
+                      - Resource  = "arn:aws:s3:::datafabric-s3-pdfrb-5690/*"
+                      - Sid       = "DenyUnencryptedConnection"
+                    },
+                  - {
+                      - Action    = [
+                          - "s3:PutObject",
+                          - "s3:GetObject",
+                          - "s3:DeleteObject",
+                        ]
+                      - Condition = {
+                          - StringNotLike = {
+                              - aws:SourceVpc = [
+                                  - "vpc-bcdcd8db",
+                                  - "vpc-5748af2c",
+                                ]
+                              - aws:userId    = [
+                                  - "AROAYWZHC7VAWXIRWF2IX:*",
+                                  - "AROAYWZHC7VAUF3UQ4VUI:*",
+                                  - "AROAYWZHC7VAV5JV7M45W:*",
+                                  - "AROAYWZHC7VAZPKFHVW5P:*",
+                                  - "AROAJSTZ3VRQGD7PAOVJM:*",
+                                  - "AROAYWZHC7VAZGG6IVLF4:*",
+                                ]
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = "*"
+                      - Resource  = [
+                          - "arn:aws:s3:::datafabric-s3-pdfrb-5690",
+                          - "arn:aws:s3:::datafabric-s3-pdfrb-5690/*",
+                        ]
+                      - Sid       = "1"
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> (known after apply)
+        # (2 unchanged attributes hidden)
+    }
+
+  # module.dfs3.data.template_file.replica_bucket_policy[0] will be read during apply
+  # (config refers to values not yet known)
+ <= data "template_file" "replica_bucket_policy"  {
+      ~ id       = "1e9270f9f67adce970fd178f04eb1446c94ea4521b70b1be3181e5843ba5c922" -> (known after apply)
+      ~ rendered = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = "s3:PutObject"
+                      - Condition = {
+                          - StringNotEquals = {
+                              - s3:x-amz-server-side-encryption = "AES256"
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = "*"
+                      - Resource  = "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690/*"
+                      - Sid       = "DenyIncorrectEncryptionHeader"
+                    },
+                  - {
+                      - Action    = "s3:PutObject"
+                      - Condition = {
+                          - StringEquals = {
+                              - s3:x-amz-server-side-encryption = "true"
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = "*"
+                      - Resource  = "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690/*"
+                      - Sid       = "DenyUnEncryptedObjectUploads"
+                    },
+                  - {
+                      - Action    = "s3:*"
+                      - Condition = {
+                          - Bool = {
+                              - Aws:SecureTransport = "false"
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = "*"
+                      - Resource  = "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690/*"
+                      - Sid       = "DenyUnencryptedConnection"
+                    },
+                  - {
+                      - Action    = [
+                          - "s3:PutObject",
+                          - "s3:GetObject",
+                          - "s3:DeleteObject",
+                        ]
+                      - Condition = {
+                          - StringNotLike = {
+                              - aws:SourceVpc = [
+                                  - "vpc-bcdcd8db",
+                                  - "vpc-5748af2c",
+                                ]
+                              - aws:userId    = [
+                                  - "AROAYWZHC7VAWXIRWF2IX:*",
+                                  - "AROAYWZHC7VAUF3UQ4VUI:*",
+                                  - "AROAYWZHC7VAV5JV7M45W:*",
+                                  - "AROAYWZHC7VAZPKFHVW5P:*",
+                                  - "AROAJSTZ3VRQGD7PAOVJM:*",
+                                  - "AROAYWZHC7VAZGG6IVLF4:*",
+                                ]
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = "*"
+                      - Resource  = [
+                          - "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690",
+                          - "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690/*",
+                        ]
+                      - Sid       = "1"
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> (known after apply)
+        # (2 unchanged attributes hidden)
+    }
+
+  # module.dfs3.data.template_file.replica_log_bucket_policy[0] will be read during apply
+  # (config refers to values not yet known)
+ <= data "template_file" "replica_log_bucket_policy"  {
+      ~ id       = "a6d4f092e9e6e94796536ea1911bb857bf735d5d6d2663ff9ced497221bff151" -> (known after apply)
+      ~ rendered = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = "s3:*"
+                      - Condition = {
+                          - Bool = {
+                              - Aws:SecureTransport = "false"
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = {
+                          - AWS = "*"
+                        }
+                      - Resource  = [
+                          - "arn:aws:s3:::datafabric-s3-lr-pdfrb-5690/*",
+                          - "arn:aws:s3:::datafabric-s3-lr-pdfrb-5690",
+                        ]
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> (known after apply)
+        # (2 unchanged attributes hidden)
+    }
+
+  # module.dfs3.aws_s3_bucket.log_bucket[0] will be updated in-place
+  ~ resource "aws_s3_bucket" "log_bucket" {
+        id                          = "datafabric-s3-lg-pdfrb-5690"
+      ~ tags                        = {
+          + "athenahealth:consumerteam"          = ""
+          + "athenahealth:creator"               = ""
+          + "athenahealth:function"              = ""
+          + "athenahealth:product"               = ""
+          + "athenahealth:script_creator"        = ""
+          + "athenahealth:team"                  = ""
+          + "athenahealth:zone"                  = ""
+          + "deployment_id"                      = ""
+          + "scm_branch"                         = ""
+            # (9 unchanged elements hidden)
+        }
+      ~ tags_all                    = {
+          + "athenahealth:consumerteam"          = (known after apply)
+          + "athenahealth:creator"               = (known after apply)
+          + "athenahealth:function"              = (known after apply)
+          + "athenahealth:product"               = (known after apply)
+          + "athenahealth:script_creator"        = (known after apply)
+          + "athenahealth:team"                  = (known after apply)
+          + "athenahealth:zone"                  = (known after apply)
+          + "deployment_id"                      = (known after apply)
+          + "scm_branch"                         = (known after apply)
+            # (9 unchanged elements hidden)
+        }
+        # (10 unchanged attributes hidden)
+
+
+
+        # (4 unchanged blocks hidden)
+    }
+
+  # module.dfs3.aws_s3_bucket.primary_bucket[0] will be updated in-place
+  ~ resource "aws_s3_bucket" "primary_bucket" {
+        id                          = "datafabric-s3-pdfrb-5690"
+      ~ tags                        = {
+          + "athenahealth:consumerteam"          = ""
+          + "athenahealth:creator"               = ""
+          + "athenahealth:function"              = ""
+          + "athenahealth:product"               = ""
+          + "athenahealth:script_creator"        = ""
+          + "athenahealth:team"                  = ""
+          + "athenahealth:zone"                  = ""
+          + "deployment_id"                      = ""
+          + "scm_branch"                         = ""
+            # (9 unchanged elements hidden)
+        }
+      ~ tags_all                    = {
+          + "athenahealth:consumerteam"          = (known after apply)
+          + "athenahealth:creator"               = (known after apply)
+          + "athenahealth:function"              = (known after apply)
+          + "athenahealth:product"               = (known after apply)
+          + "athenahealth:script_creator"        = (known after apply)
+          + "athenahealth:team"                  = (known after apply)
+          + "athenahealth:zone"                  = (known after apply)
+          + "deployment_id"                      = (known after apply)
+          + "scm_branch"                         = (known after apply)
+            # (9 unchanged elements hidden)
+        }
+        # (10 unchanged attributes hidden)
+
+
+
+
+
+        # (5 unchanged blocks hidden)
+    }
+
+  # module.dfs3.aws_s3_bucket.replica_log_bucket[0] will be updated in-place
+  ~ resource "aws_s3_bucket" "replica_log_bucket" {
+        id                          = "datafabric-s3-lr-pdfrb-5690"
+      ~ tags                        = {
+          + "athenahealth:consumerteam"          = ""
+          + "athenahealth:creator"               = ""
+          + "athenahealth:function"              = ""
+          + "athenahealth:product"               = ""
+          + "athenahealth:script_creator"        = ""
+          + "athenahealth:team"                  = ""
+          + "athenahealth:zone"                  = ""
+          + "deployment_id"                      = ""
+          + "scm_branch"                         = ""
+            # (9 unchanged elements hidden)
+        }
+      ~ tags_all                    = {
+          + "athenahealth:consumerteam"          = (known after apply)
+          + "athenahealth:creator"               = (known after apply)
+          + "athenahealth:function"              = (known after apply)
+          + "athenahealth:product"               = (known after apply)
+          + "athenahealth:script_creator"        = (known after apply)
+          + "athenahealth:team"                  = (known after apply)
+          + "athenahealth:zone"                  = (known after apply)
+          + "deployment_id"                      = (known after apply)
+          + "scm_branch"                         = (known after apply)
+            # (9 unchanged elements hidden)
+        }
+        # (10 unchanged attributes hidden)
+
+
+
+        # (4 unchanged blocks hidden)
+    }
+
+  # module.dfs3.aws_s3_bucket.replication_destination[0] will be updated in-place
+  ~ resource "aws_s3_bucket" "replication_destination" {
+        id                          = "datafabric-s3-replica-pdfrb-5690"
+      ~ tags                        = {
+          + "athenahealth:consumerteam"          = ""
+          + "athenahealth:creator"               = ""
+          + "athenahealth:function"              = ""
+          + "athenahealth:product"               = ""
+          + "athenahealth:script_creator"        = ""
+          + "athenahealth:team"                  = ""
+          + "athenahealth:zone"                  = ""
+          + "deployment_id"                      = ""
+          + "scm_branch"                         = ""
+            # (9 unchanged elements hidden)
+        }
+      ~ tags_all                    = {
+          + "athenahealth:consumerteam"          = (known after apply)
+          + "athenahealth:creator"               = (known after apply)
+          + "athenahealth:function"              = (known after apply)
+          + "athenahealth:product"               = (known after apply)
+          + "athenahealth:script_creator"        = (known after apply)
+          + "athenahealth:team"                  = (known after apply)
+          + "athenahealth:zone"                  = (known after apply)
+          + "deployment_id"                      = (known after apply)
+          + "scm_branch"                         = (known after apply)
+            # (9 unchanged elements hidden)
+        }
+        # (10 unchanged attributes hidden)
+
+
+
+
+
+        # (5 unchanged blocks hidden)
+    }
+
+  # module.dfs3.aws_s3_bucket_policy.bucket_policy_primary[0] will be updated in-place
+  ~ resource "aws_s3_bucket_policy" "bucket_policy_primary" {
+        id     = "datafabric-s3-pdfrb-5690"
+      ~ policy = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = "s3:PutObject"
+                      - Condition = {
+                          - StringNotEquals = {
+                              - s3:x-amz-server-side-encryption = "AES256"
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = "*"
+                      - Resource  = "arn:aws:s3:::datafabric-s3-pdfrb-5690/*"
+                      - Sid       = "DenyIncorrectEncryptionHeader"
+                    },
+                  - {
+                      - Action    = "s3:PutObject"
+                      - Condition = {
+                          - StringEquals = {
+                              - s3:x-amz-server-side-encryption = "true"
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = "*"
+                      - Resource  = "arn:aws:s3:::datafabric-s3-pdfrb-5690/*"
+                      - Sid       = "DenyUnEncryptedObjectUploads"
+                    },
+                  - {
+                      - Action    = "s3:*"
+                      - Condition = {
+                          - Bool = {
+                              - Aws:SecureTransport = "false"
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = "*"
+                      - Resource  = "arn:aws:s3:::datafabric-s3-pdfrb-5690/*"
+                      - Sid       = "DenyUnencryptedConnection"
+                    },
+                  - {
+                      - Action    = [
+                          - "s3:PutObject",
+                          - "s3:GetObject",
+                          - "s3:DeleteObject",
+                        ]
+                      - Condition = {
+                          - StringNotLike = {
+                              - aws:SourceVpc = [
+                                  - "vpc-bcdcd8db",
+                                  - "vpc-5748af2c",
+                                ]
+                              - aws:userId    = [
+                                  - "AROAYWZHC7VAWXIRWF2IX:*",
+                                  - "AROAYWZHC7VAUF3UQ4VUI:*",
+                                  - "AROAYWZHC7VAV5JV7M45W:*",
+                                  - "AROAYWZHC7VAZPKFHVW5P:*",
+                                  - "AROAJSTZ3VRQGD7PAOVJM:*",
+                                  - "AROAYWZHC7VAZGG6IVLF4:*",
+                                ]
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = "*"
+                      - Resource  = [
+                          - "arn:aws:s3:::datafabric-s3-pdfrb-5690",
+                          - "arn:aws:s3:::datafabric-s3-pdfrb-5690/*",
+                        ]
+                      - Sid       = "1"
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> (known after apply)
+        # (1 unchanged attribute hidden)
+    }
+
+  # module.dfs3.aws_s3_bucket_policy.bucket_policy_replica[0] will be updated in-place
+  ~ resource "aws_s3_bucket_policy" "bucket_policy_replica" {
+        id     = "datafabric-s3-replica-pdfrb-5690"
+      ~ policy = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = "s3:PutObject"
+                      - Condition = {
+                          - StringNotEquals = {
+                              - s3:x-amz-server-side-encryption = "AES256"
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = "*"
+                      - Resource  = "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690/*"
+                      - Sid       = "DenyIncorrectEncryptionHeader"
+                    },
+                  - {
+                      - Action    = "s3:PutObject"
+                      - Condition = {
+                          - StringEquals = {
+                              - s3:x-amz-server-side-encryption = "true"
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = "*"
+                      - Resource  = "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690/*"
+                      - Sid       = "DenyUnEncryptedObjectUploads"
+                    },
+                  - {
+                      - Action    = "s3:*"
+                      - Condition = {
+                          - Bool = {
+                              - Aws:SecureTransport = "false"
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = "*"
+                      - Resource  = "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690/*"
+                      - Sid       = "DenyUnencryptedConnection"
+                    },
+                  - {
+                      - Action    = [
+                          - "s3:PutObject",
+                          - "s3:GetObject",
+                          - "s3:DeleteObject",
+                        ]
+                      - Condition = {
+                          - StringNotLike = {
+                              - aws:SourceVpc = [
+                                  - "vpc-bcdcd8db",
+                                  - "vpc-5748af2c",
+                                ]
+                              - aws:userId    = [
+                                  - "AROAYWZHC7VAWXIRWF2IX:*",
+                                  - "AROAYWZHC7VAUF3UQ4VUI:*",
+                                  - "AROAYWZHC7VAV5JV7M45W:*",
+                                  - "AROAYWZHC7VAZPKFHVW5P:*",
+                                  - "AROAJSTZ3VRQGD7PAOVJM:*",
+                                  - "AROAYWZHC7VAZGG6IVLF4:*",
+                                ]
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = "*"
+                      - Resource  = [
+                          - "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690",
+                          - "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690/*",
+                        ]
+                      - Sid       = "1"
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> (known after apply)
+        # (1 unchanged attribute hidden)
+    }
+
+  # module.dfs3.aws_s3_bucket_policy.primary_log_bucket_policy_json[0] will be updated in-place
+  ~ resource "aws_s3_bucket_policy" "primary_log_bucket_policy_json" {
+        id     = "datafabric-s3-lg-pdfrb-5690"
+      ~ policy = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = "s3:*"
+                      - Condition = {
+                          - Bool = {
+                              - Aws:SecureTransport = "false"
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = {
+                          - AWS = "*"
+                        }
+                      - Resource  = [
+                          - "arn:aws:s3:::datafabric-s3-lg-pdfrb-5690/*",
+                          - "arn:aws:s3:::datafabric-s3-lg-pdfrb-5690",
+                        ]
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> (known after apply)
+        # (1 unchanged attribute hidden)
+    }
+
+  # module.dfs3.aws_s3_bucket_policy.replica_log_bucket_policy_json[0] will be updated in-place
+  ~ resource "aws_s3_bucket_policy" "replica_log_bucket_policy_json" {
+        id     = "datafabric-s3-lr-pdfrb-5690"
+      ~ policy = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = "s3:*"
+                      - Condition = {
+                          - Bool = {
+                              - Aws:SecureTransport = "false"
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = {
+                          - AWS = "*"
+                        }
+                      - Resource  = [
+                          - "arn:aws:s3:::datafabric-s3-lr-pdfrb-5690/*",
+                          - "arn:aws:s3:::datafabric-s3-lr-pdfrb-5690",
+                        ]
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> (known after apply)
+        # (1 unchanged attribute hidden)
+    }
+
+Plan: 0 to add, 8 to change, 0 to destroy.
+
+Saved the plan to: plan.tfplan
+
+To perform exactly these actions, run the following command to apply:
+    terraform apply "plan.tfplan"
++ terraform show -json plan.tfplan
+Initializing modules...
+Downloading git::https://bitbucket.athenahealth.com/scm/pdfsa/iac-terraform-aws-s3.git?ref=master for dfs3...
+- dfs3 in .terraform/modules/dfs3
+Downloading git::https://bitbucket.athenahealth.com/scm/pdfsa/iac-terraform-aws-common.git?ref=0.1.8 for dfs3.common_primary...
+- dfs3.common_primary in .terraform/modules/dfs3.common_primary
+Downloading git::https://bitbucket.athenahealth.com/scm/di/iac-terraform-aws-tagging.git?ref=0.5.1 for dfs3.common_primary.tags...
+- dfs3.common_primary.tags in .terraform/modules/dfs3.common_primary.tags
+Downloading git::https://bitbucket.athenahealth.com/scm/pdfsa/iac-terraform-aws-common.git?ref=0.1.8 for dfs3.common_replica...
+- dfs3.common_replica in .terraform/modules/dfs3.common_replica
+Downloading git::https://bitbucket.athenahealth.com/scm/di/iac-terraform-aws-tagging.git?ref=0.5.1 for dfs3.common_replica.tags...
+- dfs3.common_replica.tags in .terraform/modules/dfs3.common_replica.tags
+- dfs3.primary_notifications in .terraform/modules/dfs3/modules/notification
+- dfs3.replica_notifications in .terraform/modules/dfs3/modules/notification
+
+Initializing the backend...
+
+Successfully configured the backend "s3"! Terraform will automatically
+use this backend unless the backend configuration changes.
+
+Initializing provider plugins...
+- Reusing previous version of hashicorp/template from the dependency lock file
+- Reusing previous version of hashicorp/http from the dependency lock file
+- Reusing previous version of hashicorp/aws from the dependency lock file
+- Installing hashicorp/template v2.2.0...
+- Installed hashicorp/template v2.2.0 (signed by HashiCorp)
+- Installing hashicorp/http v1.2.0...
+- Installed hashicorp/http v1.2.0 (unauthenticated)
+- Installing hashicorp/aws v4.14.0...
+- Installed hashicorp/aws v4.14.0 (unauthenticated)
+
+Terraform has been successfully initialized!
+
+You may now begin working with Terraform. Try running "terraform plan" to see
+any changes that are required for your infrastructure. All Terraform commands
+should now work.
+
+If you ever set or change modules or backend configuration for Terraform,
+rerun this command to reinitialize your working directory. If you forget, other
+commands will detect it and remind you to do so if necessary.
+
+
+module.dfs3.aws_s3_bucket.replica_log_bucket[0]: Refreshing state... [id=datafabric-s3-lr-pdfrb-5690]
+module.dfs3.aws_iam_role.primary_log_read_only_role[0]: Refreshing state... [id=datafabric-s3-pdfrb-5690_lo]
+module.dfs3.aws_iam_role.replica_log_read_only_role[0]: Refreshing state... [id=datafabric-s3-pdfrb-5690_lr]
+module.dfs3.aws_s3_bucket.replication_destination[0]: Refreshing state... [id=datafabric-s3-replica-pdfrb-5690]
+module.dfs3.aws_iam_role.schema_role[0]: Refreshing state... [id=datafabric-s3-pdfrb-5690_sc]
+module.dfs3.aws_iam_role.read_only_role[0]: Refreshing state... [id=datafabric-s3-pdfrb-5690_ro]
+module.dfs3.aws_iam_role.admin_role[0]: Refreshing state... [id=datafabric-s3-pdfrb-5690_ad]
+module.dfs3.aws_iam_role.primary_replication[0]: Refreshing state... [id=datafabric-s3-pdfrb-5690-primary-replication]
+module.dfs3.aws_s3_bucket.log_bucket[0]: Refreshing state... [id=datafabric-s3-lg-pdfrb-5690]
+module.dfs3.aws_iam_role.readwrite_role[0]: Refreshing state... [id=datafabric-s3-pdfrb-5690_rw]
+module.dfs3.aws_s3_bucket.primary_bucket[0]: Refreshing state... [id=datafabric-s3-pdfrb-5690]
+module.dfs3.aws_iam_role_policy.primary_log_ropolicy[0]: Refreshing state... [id=datafabric-s3-pdfrb-5690_lo:datafabric-s3-pdfrb-5690-ro-policy]
+module.dfs3.aws_s3_bucket_server_side_encryption_configuration.log_bucket_server_side_encryption_configuration[0]: Refreshing state... [id=datafabric-s3-lg-pdfrb-5690]
+module.dfs3.aws_s3_bucket_acl.s3_log_bucket_grant_permissions[0]: Refreshing state... [id=datafabric-s3-lg-pdfrb-5690]
+module.dfs3.aws_s3_bucket_public_access_block.block_log_public_access[0]: Refreshing state... [id=datafabric-s3-lg-pdfrb-5690]
+module.dfs3.aws_iam_role_policy.scpolicy[0]: Refreshing state... [id=datafabric-s3-pdfrb-5690_sc:datafabric-s3-pdfrb-5690-sc-policy]
+module.dfs3.aws_iam_role_policy.ropolicy[0]: Refreshing state... [id=datafabric-s3-pdfrb-5690_ro:datafabric-s3-pdfrb-5690-ro-policy]
+module.dfs3.aws_iam_role_policy.replica_log_ropolicy[0]: Refreshing state... [id=datafabric-s3-pdfrb-5690_lr:datafabric-s3-lr-pdfrb-5690-ro-policy]
+module.dfs3.aws_iam_role_policy.primary_replication[0]: Refreshing state... [id=datafabric-s3-pdfrb-5690-primary-replication:datafabric-s3-pdfrb-5690-primary-replication]
+module.dfs3.aws_s3_bucket_policy.primary_log_bucket_policy_json[0]: Refreshing state... [id=datafabric-s3-lg-pdfrb-5690]
+module.dfs3.aws_iam_role_policy.rwpolicy[0]: Refreshing state... [id=datafabric-s3-pdfrb-5690_rw:datafabric-s3-pdfrb-5690-rw-policy]
+module.dfs3.aws_iam_role_policy.adpolicy[0]: Refreshing state... [id=datafabric-s3-pdfrb-5690_ad:datafabric-s3-pdfrb-5690-ad-policy]
+module.dfs3.aws_s3_bucket_versioning.primary_bucket_versioning[0]: Refreshing state... [id=datafabric-s3-pdfrb-5690]
+module.dfs3.aws_s3_bucket_server_side_encryption_configuration.primary_bucket_server_side_encryption_configuration[0]: Refreshing state... [id=datafabric-s3-pdfrb-5690]
+module.dfs3.aws_s3_bucket_acl.primary_bucket_acl[0]: Refreshing state... [id=datafabric-s3-pdfrb-5690,private]
+module.dfs3.aws_s3_bucket_public_access_block.block_primary_public_access[0]: Refreshing state... [id=datafabric-s3-pdfrb-5690]
+module.dfs3.aws_s3_bucket_logging.primary_bucket_logging_configuration[0]: Refreshing state... [id=datafabric-s3-pdfrb-5690]
+module.dfs3.aws_s3_bucket_metric.primary_bucket[0]: Refreshing state... [id=datafabric-s3-pdfrb-5690:EntireBucket]
+module.dfs3.aws_s3_bucket_policy.bucket_policy_primary[0]: Refreshing state... [id=datafabric-s3-pdfrb-5690]
+module.dfs3.aws_s3_bucket_policy.bucket_policy_replica[0]: Refreshing state... [id=datafabric-s3-replica-pdfrb-5690]
+module.dfs3.aws_s3_bucket_versioning.replica_bucket_versioning[0]: Refreshing state... [id=datafabric-s3-replica-pdfrb-5690]
+module.dfs3.aws_s3_bucket_metric.replica_bucket[0]: Refreshing state... [id=datafabric-s3-replica-pdfrb-5690:EntireBucket]
+module.dfs3.aws_s3_bucket_public_access_block.block_replica_public_access[0]: Refreshing state... [id=datafabric-s3-replica-pdfrb-5690]
+module.dfs3.aws_s3_bucket_server_side_encryption_configuration.replica_bucket_server_side_encryption_configuration[0]: Refreshing state... [id=datafabric-s3-replica-pdfrb-5690]
+module.dfs3.aws_s3_bucket_public_access_block.block_replica_log_public_access[0]: Refreshing state... [id=datafabric-s3-lr-pdfrb-5690]
+module.dfs3.aws_s3_bucket_logging.replica_bucket_logging_configuration[0]: Refreshing state... [id=datafabric-s3-replica-pdfrb-5690]
+module.dfs3.aws_s3_bucket_server_side_encryption_configuration.replica_log_bucket_server_side_encryption_configuration[0]: Refreshing state... [id=datafabric-s3-lr-pdfrb-5690]
+module.dfs3.aws_s3_bucket_acl.s3_replica_log_bucket_grant_permissions[0]: Refreshing state... [id=datafabric-s3-lr-pdfrb-5690]
+module.dfs3.aws_s3_bucket_policy.replica_log_bucket_policy_json[0]: Refreshing state... [id=datafabric-s3-lr-pdfrb-5690]
+module.dfs3.aws_s3_bucket_replication_configuration.srctodest[0]: Refreshing state... [id=datafabric-s3-pdfrb-5690]
+module.dfs3.aws_s3_bucket_replication_configuration.desttosrc[0]: Refreshing state... [id=datafabric-s3-replica-pdfrb-5690]
+
+Note: Objects have changed outside of Terraform
+
+Terraform detected the following changes made outside of Terraform since the
+last "terraform apply":
+
+  # module.dfs3.aws_s3_bucket.replica_log_bucket[0] has been changed
+  ~ resource "aws_s3_bucket" "replica_log_bucket" {
+        id                          = "datafabric-s3-lr-pdfrb-5690"
+      + policy                      = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action    = "s3:*"
+                      + Condition = {
+                          + Bool = {
+                              + Aws:SecureTransport = "false"
+                            }
+                        }
+                      + Effect    = "Deny"
+                      + Principal = {
+                          + AWS = "*"
+                        }
+                      + Resource  = [
+                          + "arn:aws:s3:::datafabric-s3-lr-pdfrb-5690/*",
+                          + "arn:aws:s3:::datafabric-s3-lr-pdfrb-5690",
+                        ]
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+        tags                        = {
+            "Phi"                                = "true"
+            "Pod"                                = "datafabric"
+            "athenahealth:compliance"            = "None"
+            "athenahealth:confidentiality"       = "None"
+            "athenahealth:dataClassification"    = "confidential"
+            "athenahealth:datafabric:providedBy" = "DataFabric"
+            "athenahealth:deploymethod"          = "Terraform-IaC"
+            "athenahealth:environment"           = "development"
+            "athenahealth:wfa_id"                = "5690"
+        }
+        # (10 unchanged attributes hidden)
+
+      + grant {
+          + permissions = [
+              + "READ_ACP",
+              + "WRITE",
+            ]
+          + type        = "Group"
+          + uri         = "http://acs.amazonaws.com/groups/s3/LogDelivery"
+        }
+
+      + server_side_encryption_configuration {
+          + rule {
+              + bucket_key_enabled = false
+
+              + apply_server_side_encryption_by_default {
+                  + sse_algorithm = "AES256"
+                }
+            }
+        }
+
+        # (2 unchanged blocks hidden)
+    }
+  # module.dfs3.aws_iam_role.primary_log_read_only_role[0] has been changed
+  ~ resource "aws_iam_role" "primary_log_read_only_role" {
+      ~ assume_role_policy    = jsonencode(
+          ~ {
+              ~ Statement = [
+                  ~ {
+                      ~ Principal = {
+                          ~ AWS = [
+                              - "arn:aws:iam::598693051713:role/StackBuilder",
+                                "arn:aws:iam::598693051713:role/SAMLDeveloper",
+                              + "arn:aws:iam::598693051713:role/StackBuilder",
+                            ]
+                        }
+                        # (2 unchanged elements hidden)
+                    },
+                ]
+                # (1 unchanged element hidden)
+            }
+        )
+        id                    = "datafabric-s3-pdfrb-5690_lo"
+        name                  = "datafabric-s3-pdfrb-5690_lo"
+        tags                  = {
+            "Phi"                                = "true"
+            "Pod"                                = "datafabric"
+            "athenahealth:compliance"            = "None"
+            "athenahealth:confidentiality"       = "None"
+            "athenahealth:consumerteam"          = ""
+            "athenahealth:creator"               = ""
+            "athenahealth:dataClassification"    = "confidential"
+            "athenahealth:datafabric:providedBy" = "DataFabric"
+            "athenahealth:deploymethod"          = "Terraform-IaC"
+            "athenahealth:environment"           = "development"
+            "athenahealth:function"              = ""
+            "athenahealth:product"               = ""
+            "athenahealth:script_creator"        = ""
+            "athenahealth:team"                  = ""
+            "athenahealth:wfa_id"                = "5690"
+            "athenahealth:zone"                  = ""
+            "deployment_id"                      = ""
+            "scm_branch"                         = ""
+        }
+        # (9 unchanged attributes hidden)
+
+      - inline_policy {}
+      + inline_policy {
+          + name   = "datafabric-s3-pdfrb-5690-ro-policy"
+          + policy = jsonencode(
+                {
+                  + Statement = [
+                      + {
+                          + Action   = [
+                              + "s3:ListBucketByTags",
+                              + "s3:ListBucketMultipartUploads",
+                              + "s3:ListBucket",
+                            ]
+                          + Effect   = "Allow"
+                          + Resource = [
+                              + "arn:aws:s3:::datafabric-s3-pdfrb-5690",
+                              + "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690",
+                            ]
+                        },
+                      + {
+                          + Action   = [
+                              + "s3:GetObject",
+                              + "s3:GetObjectVersion",
+                              + "s3:ListMultipartUploadParts",
+                            ]
+                          + Effect   = "Allow"
+                          + Resource = [
+                              + "arn:aws:s3:::datafabric-s3-pdfrb-5690/*",
+                              + "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690/*",
+                            ]
+                        },
+                    ]
+                  + Version   = "2012-10-17"
+                }
+            )
+        }
+    }
+  # module.dfs3.aws_iam_role.replica_log_read_only_role[0] has been changed
+  ~ resource "aws_iam_role" "replica_log_read_only_role" {
+      ~ assume_role_policy    = jsonencode(
+          ~ {
+              ~ Statement = [
+                  ~ {
+                      ~ Principal = {
+                          ~ AWS = [
+                              - "arn:aws:iam::598693051713:role/SAMLDeveloper",
+                                "arn:aws:iam::598693051713:role/StackBuilder",
+                              + "arn:aws:iam::598693051713:role/SAMLDeveloper",
+                            ]
+                        }
+                        # (2 unchanged elements hidden)
+                    },
+                ]
+                # (1 unchanged element hidden)
+            }
+        )
+        id                    = "datafabric-s3-pdfrb-5690_lr"
+        name                  = "datafabric-s3-pdfrb-5690_lr"
+        tags                  = {
+            "Phi"                                = "true"
+            "Pod"                                = "datafabric"
+            "athenahealth:compliance"            = "None"
+            "athenahealth:confidentiality"       = "None"
+            "athenahealth:consumerteam"          = ""
+            "athenahealth:creator"               = ""
+            "athenahealth:dataClassification"    = "confidential"
+            "athenahealth:datafabric:providedBy" = "DataFabric"
+            "athenahealth:deploymethod"          = "Terraform-IaC"
+            "athenahealth:environment"           = "development"
+            "athenahealth:function"              = ""
+            "athenahealth:product"               = ""
+            "athenahealth:script_creator"        = ""
+            "athenahealth:team"                  = ""
+            "athenahealth:wfa_id"                = "5690"
+            "athenahealth:zone"                  = ""
+            "deployment_id"                      = ""
+            "scm_branch"                         = ""
+        }
+        # (9 unchanged attributes hidden)
+
+      - inline_policy {}
+      + inline_policy {
+          + name   = "datafabric-s3-lr-pdfrb-5690-ro-policy"
+          + policy = jsonencode(
+                {
+                  + Statement = [
+                      + {
+                          + Action   = [
+                              + "s3:ListBucketByTags",
+                              + "s3:ListBucketMultipartUploads",
+                              + "s3:ListBucket",
+                            ]
+                          + Effect   = "Allow"
+                          + Resource = [
+                              + "arn:aws:s3:::datafabric-s3-pdfrb-5690",
+                              + "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690",
+                            ]
+                        },
+                      + {
+                          + Action   = [
+                              + "s3:GetObject",
+                              + "s3:GetObjectVersion",
+                              + "s3:ListMultipartUploadParts",
+                            ]
+                          + Effect   = "Allow"
+                          + Resource = [
+                              + "arn:aws:s3:::datafabric-s3-pdfrb-5690/*",
+                              + "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690/*",
+                            ]
+                        },
+                    ]
+                  + Version   = "2012-10-17"
+                }
+            )
+        }
+    }
+  # module.dfs3.aws_s3_bucket_policy.bucket_policy_primary[0] has been changed
+  ~ resource "aws_s3_bucket_policy" "bucket_policy_primary" {
+        id     = "datafabric-s3-pdfrb-5690"
+      ~ policy = jsonencode( [2m# whitespace cha
+            {
+                Statement = [
+                    {
+                        Action    = "s3:PutObject"
+                        Condition = {
+                            StringNotEquals = {
+                                s3:x-amz-server-side-encryption = "AES256"
+                            }
+                        }
+                        Effect    = "Deny"
+                        Principal = "*"
+                        Resource  = "arn:aws:s3:::datafabric-s3-pdfrb-5690/*"
+                        Sid       = "DenyIncorrectEncryptionHeader"
+                    },
+                    {
+                        Action    = "s3:PutObject"
+                        Condition = {
+                            StringEquals = {
+                                s3:x-amz-server-side-encryption = "true"
+                            }
+                        }
+                        Effect    = "Deny"
+                        Principal = "*"
+                        Resource  = "arn:aws:s3:::datafabric-s3-pdfrb-5690/*"
+                        Sid       = "DenyUnEncryptedObjectUploads"
+                    },
+                    {
+                        Action    = "s3:*"
+                        Condition = {
+                            Bool = {
+                                Aws:SecureTransport = "false"
+                            }
+                        }
+                        Effect    = "Deny"
+                        Principal = "*"
+                        Resource  = "arn:aws:s3:::datafabric-s3-pdfrb-5690/*"
+                        Sid       = "DenyUnencryptedConnection"
+                    },
+                    {
+                        Action    = [
+                            "s3:PutObject",
+                            "s3:GetObject",
+                            "s3:DeleteObject",
+                        ]
+                        Condition = {
+                            StringNotLike = {
+                                aws:SourceVpc = [
+                                    "vpc-bcdcd8db",
+                                    "vpc-5748af2c",
+                                ]
+                                aws:userId    = [
+                                    "AROAYWZHC7VAWXIRWF2IX:*",
+                                    "AROAYWZHC7VAUF3UQ4VUI:*",
+                                    "AROAYWZHC7VAV5JV7M45W:*",
+                                    "AROAYWZHC7VAZPKFHVW5P:*",
+                                    "AROAJSTZ3VRQGD7PAOVJM:*",
+                                    "AROAYWZHC7VAZGG6IVLF4:*",
+                                ]
+                            }
+                        }
+                        Effect    = "Deny"
+                        Principal = "*"
+                        Resource  = [
+                            "arn:aws:s3:::datafabric-s3-pdfrb-5690",
+                            "arn:aws:s3:::datafabric-s3-pdfrb-5690/*",
+                        ]
+                        Sid       = "1"
+                    },
+                ]
+                Version   = "2012-10-17"
+            }
+        )
+        # (1 unchanged attribute hidden)
+    }
+  # module.dfs3.aws_s3_bucket_policy.primary_log_bucket_policy_json[0] has been changed
+  ~ resource "aws_s3_bucket_policy" "primary_log_bucket_policy_json" {
+        id     = "datafabric-s3-lg-pdfrb-5690"
+      ~ policy = jsonencode( [2m# whitespace cha
+            {
+                Statement = [
+                    {
+                        Action    = "s3:*"
+                        Condition = {
+                            Bool = {
+                                Aws:SecureTransport = "false"
+                            }
+                        }
+                        Effect    = "Deny"
+                        Principal = {
+                            AWS = "*"
+                        }
+                        Resource  = [
+                            "arn:aws:s3:::datafabric-s3-lg-pdfrb-5690/*",
+                            "arn:aws:s3:::datafabric-s3-lg-pdfrb-5690",
+                        ]
+                    },
+                ]
+                Version   = "2012-10-17"
+            }
+        )
+        # (1 unchanged attribute hidden)
+    }
+  # module.dfs3.aws_iam_role.readwrite_role[0] has been changed
+  ~ resource "aws_iam_role" "readwrite_role" {
+        id                    = "datafabric-s3-pdfrb-5690_rw"
+        name                  = "datafabric-s3-pdfrb-5690_rw"
+        tags                  = {
+            "Phi"                                = "true"
+            "Pod"                                = "datafabric"
+            "athenahealth:compliance"            = "None"
+            "athenahealth:confidentiality"       = "None"
+            "athenahealth:consumerteam"          = ""
+            "athenahealth:creator"               = ""
+            "athenahealth:dataClassification"    = "confidential"
+            "athenahealth:datafabric:providedBy" = "DataFabric"
+            "athenahealth:deploymethod"          = "Terraform-IaC"
+            "athenahealth:environment"           = "development"
+            "athenahealth:function"              = ""
+            "athenahealth:product"               = ""
+            "athenahealth:script_creator"        = ""
+            "athenahealth:team"                  = ""
+            "athenahealth:wfa_id"                = "5690"
+            "athenahealth:zone"                  = ""
+            "deployment_id"                      = ""
+            "scm_branch"                         = ""
+        }
+        # (10 unchanged attributes hidden)
+
+      - inline_policy {}
+      + inline_policy {
+          + name   = "datafabric-s3-pdfrb-5690-rw-policy"
+          + policy = jsonencode(
+                {
+                  + Statement = [
+                      + {
+                          + Action   = [
+                              + "s3:ListBucketByTags",
+                              + "s3:ListBucketMultipartUploads",
+                              + "s3:ListBucket",
+                            ]
+                          + Effect   = "Allow"
+                          + Resource = [
+                              + "arn:aws:s3:::datafabric-s3-pdfrb-5690",
+                              + "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690",
+                            ]
+                        },
+                      + {
+                          + Action   = [
+                              + "s3:GetObject",
+                              + "s3:GetObjectVersion",
+                              + "s3:ListMultipartUploadParts",
+                              + "s3:PutObject",
+                              + "s3:AbortMultipartUpload",
+                              + "s3:DeleteObjectVersion",
+                              + "s3:DeleteObject",
+                            ]
+                          + Effect   = "Allow"
+                          + Resource = [
+                              + "arn:aws:s3:::datafabric-s3-pdfrb-5690/*",
+                              + "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690/*",
+                            ]
+                        },
+                    ]
+                  + Version   = "2012-10-17"
+                }
+            )
+        }
+    }
+  # module.dfs3.aws_s3_bucket_server_side_encryption_configuration.primary_bucket_server_side_encryption_configuration[0] has been changed
+  ~ resource "aws_s3_bucket_server_side_encryption_configuration" "primary_bucket_server_side_encryption_configuration" {
+        id     = "datafabric-s3-pdfrb-5690"
+        # (1 unchanged attribute hidden)
+
+      + rule {
+          + bucket_key_enabled = false
+
+          + apply_server_side_encryption_by_default {
+              + sse_algorithm = "AES256"
+            }
+        }
+      - rule {
+          - apply_server_side_encryption_by_default {
+              - sse_algorithm = "AES256" -> null
+            }
+        }
+    }
+  # module.dfs3.aws_iam_role.read_only_role[0] has been changed
+  ~ resource "aws_iam_role" "read_only_role" {
+        id                    = "datafabric-s3-pdfrb-5690_ro"
+        name                  = "datafabric-s3-pdfrb-5690_ro"
+        tags                  = {
+            "Phi"                                = "true"
+            "Pod"                                = "datafabric"
+            "athenahealth:compliance"            = "None"
+            "athenahealth:confidentiality"       = "None"
+            "athenahealth:consumerteam"          = ""
+            "athenahealth:creator"               = ""
+            "athenahealth:dataClassification"    = "confidential"
+            "athenahealth:datafabric:providedBy" = "DataFabric"
+            "athenahealth:deploymethod"          = "Terraform-IaC"
+            "athenahealth:environment"           = "development"
+            "athenahealth:function"              = ""
+            "athenahealth:product"               = ""
+            "athenahealth:script_creator"        = ""
+            "athenahealth:team"                  = ""
+            "athenahealth:wfa_id"                = "5690"
+            "athenahealth:zone"                  = ""
+            "deployment_id"                      = ""
+            "scm_branch"                         = ""
+        }
+        # (10 unchanged attributes hidden)
+
+      - inline_policy {}
+      + inline_policy {
+          + name   = "datafabric-s3-pdfrb-5690-ro-policy"
+          + policy = jsonencode(
+                {
+                  + Statement = [
+                      + {
+                          + Action   = [
+                              + "s3:ListBucketByTags",
+                              + "s3:ListBucketMultipartUploads",
+                              + "s3:ListBucket",
+                            ]
+                          + Effect   = "Allow"
+                          + Resource = [
+                              + "arn:aws:s3:::datafabric-s3-pdfrb-5690",
+                              + "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690",
+                            ]
+                        },
+                      + {
+                          + Action   = [
+                              + "s3:GetObject",
+                              + "s3:GetObjectVersion",
+                              + "s3:ListMultipartUploadParts",
+                            ]
+                          + Effect   = "Allow"
+                          + Resource = [
+                              + "arn:aws:s3:::datafabric-s3-pdfrb-5690/*",
+                              + "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690/*",
+                            ]
+                        },
+                    ]
+                  + Version   = "2012-10-17"
+                }
+            )
+        }
+    }
+  # module.dfs3.aws_iam_role.primary_replication[0] has been changed
+  ~ resource "aws_iam_role" "primary_replication" {
+        id                    = "datafabric-s3-pdfrb-5690-primary-replication"
+        name                  = "datafabric-s3-pdfrb-5690-primary-replication"
+        tags                  = {
+            "Phi"                                = "true"
+            "Pod"                                = "datafabric"
+            "athenahealth:compliance"            = "None"
+            "athenahealth:confidentiality"       = "None"
+            "athenahealth:consumerteam"          = ""
+            "athenahealth:creator"               = ""
+            "athenahealth:dataClassification"    = "confidential"
+            "athenahealth:datafabric:providedBy" = "DataFabric"
+            "athenahealth:deploymethod"          = "Terraform-IaC"
+            "athenahealth:environment"           = "development"
+            "athenahealth:function"              = ""
+            "athenahealth:product"               = ""
+            "athenahealth:script_creator"        = ""
+            "athenahealth:team"                  = ""
+            "athenahealth:wfa_id"                = "5690"
+            "athenahealth:zone"                  = ""
+            "deployment_id"                      = ""
+            "scm_branch"                         = ""
+        }
+        # (10 unchanged attributes hidden)
+
+      - inline_policy {}
+      + inline_policy {
+          + name   = "datafabric-s3-pdfrb-5690-primary-replication"
+          + policy = jsonencode(
+                {
+                  + Statement = [
+                      + {
+                          + Action   = [
+                              + "s3:GetReplicationConfiguration",
+                              + "s3:ListBucket",
+                            ]
+                          + Effect   = "Allow"
+                          + Resource = "arn:aws:s3:::datafabric-s3-pdfrb-5690"
+                        },
+                      + {
+                          + Action   = [
+                              + "s3:GetObjectVersion",
+                              + "s3:GetObjectVersionAcl",
+                              + "s3:GetObjectVersionTagging",
+                            ]
+                          + Effect   = "Allow"
+                          + Resource = "arn:aws:s3:::datafabric-s3-pdfrb-5690/*"
+                        },
+                      + {
+                          + Action   = [
+                              + "s3:ReplicateObject",
+                              + "s3:ReplicateDelete",
+                              + "s3:ReplicateTags",
+                            ]
+                          + Effect   = "Allow"
+                          + Resource = "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690/*"
+                        },
+                      + {
+                          + Action   = [
+                              + "s3:ListBucket",
+                              + "s3:GetReplicationConfiguration",
+                            ]
+                          + Effect   = "Allow"
+                          + Resource = [
+                              + "arn:aws:s3:::datafabric-s3-pdfrb-5690",
+                            ]
+                        },
+                      + {
+                          + Action   = [
+                              + "s3:ListAllMyBuckets",
+                              + "s3:HeadBucket",
+                            ]
+                          + Effect   = "Allow"
+                          + Resource = "*"
+                        },
+                      + {
+                          + Action   = "s3:*"
+                          + Effect   = "Allow"
+                          + Resource = [
+                              + "arn:aws:s3:::*/*",
+                              + "arn:aws:s3:::datafabric-s3-pdfrb-5690",
+                              + "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690",
+                            ]
+                        },
+                    ]
+                  + Version   = "2012-10-17"
+                }
+            )
+        }
+    }
+  # module.dfs3.aws_iam_role.admin_role[0] has been changed
+  ~ resource "aws_iam_role" "admin_role" {
+        id                    = "datafabric-s3-pdfrb-5690_ad"
+        name                  = "datafabric-s3-pdfrb-5690_ad"
+        tags                  = {
+            "Phi"                                = "true"
+            "Pod"                                = "datafabric"
+            "athenahealth:compliance"            = "None"
+            "athenahealth:confidentiality"       = "None"
+            "athenahealth:consumerteam"          = ""
+            "athenahealth:creator"               = ""
+            "athenahealth:dataClassification"    = "confidential"
+            "athenahealth:datafabric:providedBy" = "DataFabric"
+            "athenahealth:deploymethod"          = "Terraform-IaC"
+            "athenahealth:environment"           = "development"
+            "athenahealth:function"              = ""
+            "athenahealth:product"               = ""
+            "athenahealth:script_creator"        = ""
+            "athenahealth:team"                  = ""
+            "athenahealth:wfa_id"                = "5690"
+            "athenahealth:zone"                  = ""
+            "deployment_id"                      = ""
+            "scm_branch"                         = ""
+        }
+        # (10 unchanged attributes hidden)
+
+      - inline_policy {}
+      + inline_policy {
+          + name   = "datafabric-s3-pdfrb-5690-ad-policy"
+          + policy = jsonencode(
+                {
+                  + Statement = [
+                      + {
+                          + Action   = [
+                              + "s3:ListBucketByTags",
+                              + "s3:ListBucketMultipartUploads",
+                              + "s3:ListBucket",
+                              + "s3:GetLifecycleConfiguration",
+                              + "s3:GetBucketTagging",
+                              + "s3:GetInventoryConfiguration",
+                              + "s3:ListBucketVersions",
+                              + "s3:GetAccelerateConfiguration",
+                              + "s3:GetBucketPolicy",
+                              + "s3:GetEncryptionConfiguration",
+                              + "s3:GetBucketWebsite",
+                              + "s3:GetBucketAcl",
+                              + "s3:GetBucketNotification",
+                              + "s3:GetReplicationConfiguration",
+                              + "s3:GetAnalyticsConfiguration",
+                              + "s3:GetBucketLocation",
+                              + "s3:PutAnalyticsConfiguration",
+                              + "s3:PutAccelerateConfiguration",
+                              + "s3:GetBucketLogging",
+                              + "s3:ListBucket",
+                              + "s3:PutEncryptionConfiguration",
+                              + "s3:DeleteBucketWebsite",
+                              + "s3:PutBucketTagging",
+                              + "s3:GetBucketRequestPayment",
+                              + "s3:PutLifecycleConfiguration",
+                              + "s3:PutBucketAcl",
+                              + "s3:GetMetricsConfiguration",
+                              + "s3:DeleteBucket",
+                              + "s3:PutBucketVersioning",
+                              + "s3:GetIpConfiguration",
+                              + "s3:PutMetricsConfiguration",
+                              + "s3:PutReplicationConfiguration",
+                              + "s3:GetBucketVersioning",
+                              + "s3:PutBucketCORS",
+                              + "s3:DeleteBucketPolicy",
+                              + "s3:PutInventoryConfiguration",
+                              + "s3:PutIpConfiguration",
+                              + "s3:PutBucketNotification",
+                              + "s3:PutBucketWebsite",
+                              + "s3:PutBucketRequestPayment",
+                              + "s3:PutBucketLogging",
+                              + "s3:GetBucketCORS",
+                              + "s3:PutBucketPolicy",
+                            ]
+                          + Effect   = "Allow"
+                          + Resource = [
+                              + "arn:aws:s3:::datafabric-s3-pdfrb-5690",
+                              + "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690",
+                            ]
+                        },
+                      + {
+                          + Action   = [
+                              + "s3:GetObject",
+                              + "s3:GetObjectVersion",
+                              + "s3:ListMultipartUploadParts",
+                              + "s3:PutObject",
+                              + "s3:AbortMultipartUpload",
+                              + "s3:DeleteObjectVersion",
+                              + "s3:DeleteObject",
+                              + "s3:GetObjectVersionTagging",
+                              + "s3:ReplicateTags",
+                              + "s3:RestoreObject",
+                              + "s3:ReplicateObject",
+                              + "s3:GetObjectVersionTorrent",
+                              + "s3:GetObjectAcl",
+                              + "s3:GetObjectVersionAcl",
+                              + "s3:GetObjectTagging",
+                              + "s3:PutObjectTagging",
+                              + "s3:PutObjectAcl",
+                              + "s3:DeleteObjectTagging",
+                              + "s3:PutObjectVersionTagging",
+                              + "s3:DeleteObjectVersionTagging",
+                              + "s3:ObjectOwnerOverrideToBucketOwner",
+                              + "s3:GetObjectTorrent",
+                              + "s3:PutObjectVersionAcl",
+                              + "s3:GetObjectVersionForReplication",
+                              + "s3:ReplicateDelete",
+                            ]
+                          + Effect   = "Allow"
+                          + Resource = [
+                              + "arn:aws:s3:::datafabric-s3-pdfrb-5690/*",
+                              + "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690/*",
+                            ]
+                        },
+                    ]
+                  + Version   = "2012-10-17"
+                }
+            )
+        }
+    }
+  # module.dfs3.aws_s3_bucket.primary_bucket[0] has been changed
+  ~ resource "aws_s3_bucket" "primary_bucket" {
+        id                          = "datafabric-s3-pdfrb-5690"
+      + policy                      = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action    = "s3:PutObject"
+                      + Condition = {
+                          + StringNotEquals = {
+                              + s3:x-amz-server-side-encryption = "AES256"
+                            }
+                        }
+                      + Effect    = "Deny"
+                      + Principal = "*"
+                      + Resource  = "arn:aws:s3:::datafabric-s3-pdfrb-5690/*"
+                      + Sid       = "DenyIncorrectEncryptionHeader"
+                    },
+                  + {
+                      + Action    = "s3:PutObject"
+                      + Condition = {
+                          + StringEquals = {
+                              + s3:x-amz-server-side-encryption = "true"
+                            }
+                        }
+                      + Effect    = "Deny"
+                      + Principal = "*"
+                      + Resource  = "arn:aws:s3:::datafabric-s3-pdfrb-5690/*"
+                      + Sid       = "DenyUnEncryptedObjectUploads"
+                    },
+                  + {
+                      + Action    = "s3:*"
+                      + Condition = {
+                          + Bool = {
+                              + Aws:SecureTransport = "false"
+                            }
+                        }
+                      + Effect    = "Deny"
+                      + Principal = "*"
+                      + Resource  = "arn:aws:s3:::datafabric-s3-pdfrb-5690/*"
+                      + Sid       = "DenyUnencryptedConnection"
+                    },
+                  + {
+                      + Action    = [
+                          + "s3:PutObject",
+                          + "s3:GetObject",
+                          + "s3:DeleteObject",
+                        ]
+                      + Condition = {
+                          + StringNotLike = {
+                              + aws:SourceVpc = [
+                                  + "vpc-bcdcd8db",
+                                  + "vpc-5748af2c",
+                                ]
+                              + aws:userId    = [
+                                  + "AROAYWZHC7VAWXIRWF2IX:*",
+                                  + "AROAYWZHC7VAUF3UQ4VUI:*",
+                                  + "AROAYWZHC7VAV5JV7M45W:*",
+                                  + "AROAYWZHC7VAZPKFHVW5P:*",
+                                  + "AROAJSTZ3VRQGD7PAOVJM:*",
+                                  + "AROAYWZHC7VAZGG6IVLF4:*",
+                                ]
+                            }
+                        }
+                      + Effect    = "Deny"
+                      + Principal = "*"
+                      + Resource  = [
+                          + "arn:aws:s3:::datafabric-s3-pdfrb-5690",
+                          + "arn:aws:s3:::datafabric-s3-pdfrb-5690/*",
+                        ]
+                      + Sid       = "1"
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+        tags                        = {
+            "Phi"                                = "true"
+            "Pod"                                = "datafabric"
+            "athenahealth:compliance"            = "None"
+            "athenahealth:confidentiality"       = "None"
+            "athenahealth:dataClassification"    = "confidential"
+            "athenahealth:datafabric:providedBy" = "DataFabric"
+            "athenahealth:deploymethod"          = "Terraform-IaC"
+            "athenahealth:environment"           = "development"
+            "athenahealth:wfa_id"                = "5690"
+        }
+        # (10 unchanged attributes hidden)
+
+
+      + logging {
+          + target_bucket = "datafabric-s3-lg-pdfrb-5690"
+        }
+
+      + replication_configuration {
+          + role = "arn:aws:iam::598693051713:role/datafabric-s3-pdfrb-5690-primary-replication"
+
+          + rules {
+              + delete_marker_replication_status = "Enabled"
+              + id                               = "datafabric-s3-pdfrb-5690-primary-replication"
+              + priority                         = 0
+              + status                           = "Enabled"
+
+              + destination {
+                  + bucket        = "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690"
+                  + storage_class = "STANDARD"
+
+                  + metrics {
+                      + minutes = 15
+                      + status  = "Enabled"
+                    }
+
+                  + replication_time {
+                      + minutes = 15
+                      + status  = "Enabled"
+                    }
+                }
+
+              + filter {}
+
+              + source_selection_criteria {
+                }
+            }
+        }
+
+      + server_side_encryption_configuration {
+          + rule {
+              + bucket_key_enabled = false
+
+              + apply_server_side_encryption_by_default {
+                  + sse_algorithm = "AES256"
+                }
+            }
+        }
+
+      ~ versioning {
+          ~ enabled    = false -> true
+            # (1 unchanged attribute hidden)
+        }
+        # (1 unchanged block hidden)
+    }
+  # module.dfs3.aws_s3_bucket.log_bucket[0] has been changed
+  ~ resource "aws_s3_bucket" "log_bucket" {
+        id                          = "datafabric-s3-lg-pdfrb-5690"
+      + policy                      = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action    = "s3:*"
+                      + Condition = {
+                          + Bool = {
+                              + Aws:SecureTransport = "false"
+                            }
+                        }
+                      + Effect    = "Deny"
+                      + Principal = {
+                          + AWS = "*"
+                        }
+                      + Resource  = [
+                          + "arn:aws:s3:::datafabric-s3-lg-pdfrb-5690/*",
+                          + "arn:aws:s3:::datafabric-s3-lg-pdfrb-5690",
+                        ]
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+        tags                        = {
+            "Phi"                                = "true"
+            "Pod"                                = "datafabric"
+            "athenahealth:compliance"            = "None"
+            "athenahealth:confidentiality"       = "None"
+            "athenahealth:dataClassification"    = "confidential"
+            "athenahealth:datafabric:providedBy" = "DataFabric"
+            "athenahealth:deploymethod"          = "Terraform-IaC"
+            "athenahealth:environment"           = "development"
+            "athenahealth:wfa_id"                = "5690"
+        }
+        # (10 unchanged attributes hidden)
+
+      + grant {
+          + permissions = [
+              + "READ_ACP",
+              + "WRITE",
+            ]
+          + type        = "Group"
+          + uri         = "http://acs.amazonaws.com/groups/s3/LogDelivery"
+        }
+
+      + server_side_encryption_configuration {
+          + rule {
+              + bucket_key_enabled = false
+
+              + apply_server_side_encryption_by_default {
+                  + sse_algorithm = "AES256"
+                }
+            }
+        }
+
+        # (2 unchanged blocks hidden)
+    }
+  # module.dfs3.aws_s3_bucket_server_side_encryption_configuration.replica_log_bucket_server_side_encryption_configuration[0] has been changed
+  ~ resource "aws_s3_bucket_server_side_encryption_configuration" "replica_log_bucket_server_side_encryption_configuration" {
+        id     = "datafabric-s3-lr-pdfrb-5690"
+        # (1 unchanged attribute hidden)
+
+      + rule {
+          + bucket_key_enabled = false
+
+          + apply_server_side_encryption_by_default {
+              + sse_algorithm = "AES256"
+            }
+        }
+      - rule {
+          - apply_server_side_encryption_by_default {
+              - sse_algorithm = "AES256" -> null
+            }
+        }
+    }
+  # module.dfs3.aws_s3_bucket_policy.replica_log_bucket_policy_json[0] has been changed
+  ~ resource "aws_s3_bucket_policy" "replica_log_bucket_policy_json" {
+        id     = "datafabric-s3-lr-pdfrb-5690"
+      ~ policy = jsonencode( [2m# whitespace cha
+            {
+                Statement = [
+                    {
+                        Action    = "s3:*"
+                        Condition = {
+                            Bool = {
+                                Aws:SecureTransport = "false"
+                            }
+                        }
+                        Effect    = "Deny"
+                        Principal = {
+                            AWS = "*"
+                        }
+                        Resource  = [
+                            "arn:aws:s3:::datafabric-s3-lr-pdfrb-5690/*",
+                            "arn:aws:s3:::datafabric-s3-lr-pdfrb-5690",
+                        ]
+                    },
+                ]
+                Version   = "2012-10-17"
+            }
+        )
+        # (1 unchanged attribute hidden)
+    }
+  # module.dfs3.aws_s3_bucket_policy.bucket_policy_replica[0] has been changed
+  ~ resource "aws_s3_bucket_policy" "bucket_policy_replica" {
+        id     = "datafabric-s3-replica-pdfrb-5690"
+      ~ policy = jsonencode( [2m# whitespace cha
+            {
+                Statement = [
+                    {
+                        Action    = "s3:PutObject"
+                        Condition = {
+                            StringNotEquals = {
+                                s3:x-amz-server-side-encryption = "AES256"
+                            }
+                        }
+                        Effect    = "Deny"
+                        Principal = "*"
+                        Resource  = "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690/*"
+                        Sid       = "DenyIncorrectEncryptionHeader"
+                    },
+                    {
+                        Action    = "s3:PutObject"
+                        Condition = {
+                            StringEquals = {
+                                s3:x-amz-server-side-encryption = "true"
+                            }
+                        }
+                        Effect    = "Deny"
+                        Principal = "*"
+                        Resource  = "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690/*"
+                        Sid       = "DenyUnEncryptedObjectUploads"
+                    },
+                    {
+                        Action    = "s3:*"
+                        Condition = {
+                            Bool = {
+                                Aws:SecureTransport = "false"
+                            }
+                        }
+                        Effect    = "Deny"
+                        Principal = "*"
+                        Resource  = "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690/*"
+                        Sid       = "DenyUnencryptedConnection"
+                    },
+                    {
+                        Action    = [
+                            "s3:PutObject",
+                            "s3:GetObject",
+                            "s3:DeleteObject",
+                        ]
+                        Condition = {
+                            StringNotLike = {
+                                aws:SourceVpc = [
+                                    "vpc-bcdcd8db",
+                                    "vpc-5748af2c",
+                                ]
+                                aws:userId    = [
+                                    "AROAYWZHC7VAWXIRWF2IX:*",
+                                    "AROAYWZHC7VAUF3UQ4VUI:*",
+                                    "AROAYWZHC7VAV5JV7M45W:*",
+                                    "AROAYWZHC7VAZPKFHVW5P:*",
+                                    "AROAJSTZ3VRQGD7PAOVJM:*",
+                                    "AROAYWZHC7VAZGG6IVLF4:*",
+                                ]
+                            }
+                        }
+                        Effect    = "Deny"
+                        Principal = "*"
+                        Resource  = [
+                            "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690",
+                            "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690/*",
+                        ]
+                        Sid       = "1"
+                    },
+                ]
+                Version   = "2012-10-17"
+            }
+        )
+        # (1 unchanged attribute hidden)
+    }
+  # module.dfs3.aws_iam_role.schema_role[0] has been changed
+  ~ resource "aws_iam_role" "schema_role" {
+      ~ assume_role_policy    = jsonencode(
+          ~ {
+              ~ Statement = [
+                  ~ {
+                      ~ Principal = {
+                          ~ AWS = [
+                              - "arn:aws:iam::598693051713:role/StackBuilder",
+                                "arn:aws:iam::598693051713:role/SAMLDeveloper",
+                              + "arn:aws:iam::598693051713:role/StackBuilder",
+                            ]
+                        }
+                        # (2 unchanged elements hidden)
+                    },
+                ]
+                # (1 unchanged element hidden)
+            }
+        )
+        id                    = "datafabric-s3-pdfrb-5690_sc"
+        name                  = "datafabric-s3-pdfrb-5690_sc"
+        tags                  = {
+            "Phi"                                = "true"
+            "Pod"                                = "datafabric"
+            "athenahealth:compliance"            = "None"
+            "athenahealth:confidentiality"       = "None"
+            "athenahealth:consumerteam"          = ""
+            "athenahealth:creator"               = ""
+            "athenahealth:dataClassification"    = "confidential"
+            "athenahealth:datafabric:providedBy" = "DataFabric"
+            "athenahealth:deploymethod"          = "Terraform-IaC"
+            "athenahealth:environment"           = "development"
+            "athenahealth:function"              = ""
+            "athenahealth:product"               = ""
+            "athenahealth:script_creator"        = ""
+            "athenahealth:team"                  = ""
+            "athenahealth:wfa_id"                = "5690"
+            "athenahealth:zone"                  = ""
+            "deployment_id"                      = ""
+            "scm_branch"                         = ""
+        }
+        # (9 unchanged attributes hidden)
+
+      - inline_policy {}
+      + inline_policy {
+          + name   = "datafabric-s3-pdfrb-5690-sc-policy"
+          + policy = jsonencode(
+                {
+                  + Statement = [
+                      + {
+                          + Action   = [
+                              + "s3:ListBucketByTags",
+                              + "s3:ListBucketMultipartUploads",
+                              + "s3:ListBucket",
+                              + "s3:GetLifecycleConfiguration",
+                              + "s3:GetBucketTagging",
+                              + "s3:GetInventoryConfiguration",
+                              + "s3:ListBucketVersions",
+                              + "s3:GetAccelerateConfiguration",
+                              + "s3:GetBucketPolicy",
+                              + "s3:GetEncryptionConfiguration",
+                              + "s3:GetBucketWebsite",
+                              + "s3:GetBucketAcl",
+                              + "s3:GetBucketNotification",
+                              + "s3:GetReplicationConfiguration",
+                              + "s3:GetAnalyticsConfiguration",
+                              + "s3:GetBucketLocation",
+                            ]
+                          + Effect   = "Allow"
+                          + Resource = [
+                              + "arn:aws:s3:::datafabric-s3-pdfrb-5690",
+                              + "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690",
+                            ]
+                        },
+                      + {
+                          + Action   = [
+                              + "s3:GetObject",
+                              + "s3:GetObjectVersion",
+                              + "s3:ListMultipartUploadParts",
+                              + "s3:PutObject",
+                              + "s3:AbortMultipartUpload",
+                              + "s3:DeleteObjectVersion",
+                              + "s3:DeleteObject",
+                              + "s3:GetObjectVersionTagging",
+                              + "s3:ReplicateTags",
+                              + "s3:RestoreObject",
+                              + "s3:ReplicateObject",
+                              + "s3:GetObjectVersionTorrent",
+                              + "s3:GetObjectAcl",
+                              + "s3:GetObjectVersionAcl",
+                              + "s3:GetObjectTagging",
+                              + "s3:PutObjectTagging",
+                              + "s3:PutObjectAcl",
+                              + "s3:DeleteObjectTagging",
+                              + "s3:PutObjectVersionTagging",
+                              + "s3:DeleteObjectVersionTagging",
+                              + "s3:ObjectOwnerOverrideToBucketOwner",
+                              + "s3:GetObjectTorrent",
+                              + "s3:PutObjectVersionAcl",
+                              + "s3:GetObjectVersionForReplication",
+                              + "s3:ReplicateDelete",
+                            ]
+                          + Effect   = "Allow"
+                          + Resource = [
+                              + "arn:aws:s3:::datafabric-s3-pdfrb-5690/*",
+                              + "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690/*",
+                            ]
+                        },
+                    ]
+                  + Version   = "2012-10-17"
+                }
+            )
+        }
+    }
+  # module.dfs3.aws_s3_bucket_server_side_encryption_configuration.replica_bucket_server_side_encryption_configuration[0] has been changed
+  ~ resource "aws_s3_bucket_server_side_encryption_configuration" "replica_bucket_server_side_encryption_configuration" {
+        id     = "datafabric-s3-replica-pdfrb-5690"
+        # (1 unchanged attribute hidden)
+
+      + rule {
+          + bucket_key_enabled = false
+
+          + apply_server_side_encryption_by_default {
+              + sse_algorithm = "AES256"
+            }
+        }
+      - rule {
+          - apply_server_side_encryption_by_default {
+              - sse_algorithm = "AES256" -> null
+            }
+        }
+    }
+  # module.dfs3.aws_s3_bucket.replication_destination[0] has been changed
+  ~ resource "aws_s3_bucket" "replication_destination" {
+        id                          = "datafabric-s3-replica-pdfrb-5690"
+      + policy                      = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action    = "s3:PutObject"
+                      + Condition = {
+                          + StringNotEquals = {
+                              + s3:x-amz-server-side-encryption = "AES256"
+                            }
+                        }
+                      + Effect    = "Deny"
+                      + Principal = "*"
+                      + Resource  = "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690/*"
+                      + Sid       = "DenyIncorrectEncryptionHeader"
+                    },
+                  + {
+                      + Action    = "s3:PutObject"
+                      + Condition = {
+                          + StringEquals = {
+                              + s3:x-amz-server-side-encryption = "true"
+                            }
+                        }
+                      + Effect    = "Deny"
+                      + Principal = "*"
+                      + Resource  = "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690/*"
+                      + Sid       = "DenyUnEncryptedObjectUploads"
+                    },
+                  + {
+                      + Action    = "s3:*"
+                      + Condition = {
+                          + Bool = {
+                              + Aws:SecureTransport = "false"
+                            }
+                        }
+                      + Effect    = "Deny"
+                      + Principal = "*"
+                      + Resource  = "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690/*"
+                      + Sid       = "DenyUnencryptedConnection"
+                    },
+                  + {
+                      + Action    = [
+                          + "s3:PutObject",
+                          + "s3:GetObject",
+                          + "s3:DeleteObject",
+                        ]
+                      + Condition = {
+                          + StringNotLike = {
+                              + aws:SourceVpc = [
+                                  + "vpc-bcdcd8db",
+                                  + "vpc-5748af2c",
+                                ]
+                              + aws:userId    = [
+                                  + "AROAYWZHC7VAWXIRWF2IX:*",
+                                  + "AROAYWZHC7VAUF3UQ4VUI:*",
+                                  + "AROAYWZHC7VAV5JV7M45W:*",
+                                  + "AROAYWZHC7VAZPKFHVW5P:*",
+                                  + "AROAJSTZ3VRQGD7PAOVJM:*",
+                                  + "AROAYWZHC7VAZGG6IVLF4:*",
+                                ]
+                            }
+                        }
+                      + Effect    = "Deny"
+                      + Principal = "*"
+                      + Resource  = [
+                          + "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690",
+                          + "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690/*",
+                        ]
+                      + Sid       = "1"
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+        tags                        = {
+            "Phi"                                = "true"
+            "Pod"                                = "datafabric"
+            "athenahealth:compliance"            = "None"
+            "athenahealth:confidentiality"       = "None"
+            "athenahealth:dataClassification"    = "confidential"
+            "athenahealth:datafabric:providedBy" = "DataFabric"
+            "athenahealth:deploymethod"          = "Terraform-IaC"
+            "athenahealth:environment"           = "development"
+            "athenahealth:wfa_id"                = "5690"
+        }
+        # (10 unchanged attributes hidden)
+
+
+      + logging {
+          + target_bucket = "datafabric-s3-lr-pdfrb-5690"
+        }
+
+      + replication_configuration {
+          + role = "arn:aws:iam::598693051713:role/datafabric-s3-pdfrb-5690-primary-replication"
+
+          + rules {
+              + delete_marker_replication_status = "Enabled"
+              + id                               = "datafabric-s3-pdfrb-5690-replica-replication"
+              + priority                         = 0
+              + status                           = "Enabled"
+
+              + destination {
+                  + bucket        = "arn:aws:s3:::datafabric-s3-pdfrb-5690"
+                  + storage_class = "STANDARD"
+
+                  + metrics {
+                      + minutes = 15
+                      + status  = "Enabled"
+                    }
+
+                  + replication_time {
+                      + minutes = 15
+                      + status  = "Enabled"
+                    }
+                }
+
+              + filter {}
+
+              + source_selection_criteria {
+                }
+            }
+        }
+
+      + server_side_encryption_configuration {
+          + rule {
+              + bucket_key_enabled = false
+
+              + apply_server_side_encryption_by_default {
+                  + sse_algorithm = "AES256"
+                }
+            }
+        }
+
+      ~ versioning {
+          ~ enabled    = false -> true
+            # (1 unchanged attribute hidden)
+        }
+        # (1 unchanged block hidden)
+    }
+  # module.dfs3.aws_s3_bucket_server_side_encryption_configuration.log_bucket_server_side_encryption_configuration[0] has been changed
+  ~ resource "aws_s3_bucket_server_side_encryption_configuration" "log_bucket_server_side_encryption_configuration" {
+        id     = "datafabric-s3-lg-pdfrb-5690"
+        # (1 unchanged attribute hidden)
+
+      + rule {
+          + bucket_key_enabled = false
+
+          + apply_server_side_encryption_by_default {
+              + sse_algorithm = "AES256"
+            }
+        }
+      - rule {
+          - apply_server_side_encryption_by_default {
+              - sse_algorithm = "AES256" -> null
+            }
+        }
+    }
+
+Unless you have made equivalent changes to your configuration, or ignored the
+relevant attributes using ignore_changes, the following plan may include
+actions to undo or respond to these changes.
+
+[2022-06-14T05:13:27.625Z] ─────────────────────────────────────────────────────────────────────────────
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  ~ update in-place
+ <= read (data resources)
+
+Terraform will perform the following actions:
+
+  # module.dfs3.data.template_file.log_bucket_policy[0] will be read during apply
+  # (config refers to values not yet known)
+ <= data "template_file" "log_bucket_policy"  {
+      ~ id       = "689c05a6ea2234a48d9262b5f083671f2b729b5a74a27f35810598492a8f631a" -> (known after apply)
+      ~ rendered = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = "s3:*"
+                      - Condition = {
+                          - Bool = {
+                              - Aws:SecureTransport = "false"
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = {
+                          - AWS = "*"
+                        }
+                      - Resource  = [
+                          - "arn:aws:s3:::datafabric-s3-lg-pdfrb-5690/*",
+                          - "arn:aws:s3:::datafabric-s3-lg-pdfrb-5690",
+                        ]
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> (known after apply)
+        # (2 unchanged attributes hidden)
+    }
+
+  # module.dfs3.data.template_file.primary_bucket_policy[0] will be read during apply
+  # (config refers to values not yet known)
+ <= data "template_file" "primary_bucket_policy"  {
+      ~ id       = "5d13cf3603e4a060d247123bb816022c4cb908f51e07c2ddd96a959e1d0b6af5" -> (known after apply)
+      ~ rendered = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = "s3:PutObject"
+                      - Condition = {
+                          - StringNotEquals = {
+                              - s3:x-amz-server-side-encryption = "AES256"
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = "*"
+                      - Resource  = "arn:aws:s3:::datafabric-s3-pdfrb-5690/*"
+                      - Sid       = "DenyIncorrectEncryptionHeader"
+                    },
+                  - {
+                      - Action    = "s3:PutObject"
+                      - Condition = {
+                          - StringEquals = {
+                              - s3:x-amz-server-side-encryption = "true"
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = "*"
+                      - Resource  = "arn:aws:s3:::datafabric-s3-pdfrb-5690/*"
+                      - Sid       = "DenyUnEncryptedObjectUploads"
+                    },
+                  - {
+                      - Action    = "s3:*"
+                      - Condition = {
+                          - Bool = {
+                              - Aws:SecureTransport = "false"
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = "*"
+                      - Resource  = "arn:aws:s3:::datafabric-s3-pdfrb-5690/*"
+                      - Sid       = "DenyUnencryptedConnection"
+                    },
+                  - {
+                      - Action    = [
+                          - "s3:PutObject",
+                          - "s3:GetObject",
+                          - "s3:DeleteObject",
+                        ]
+                      - Condition = {
+                          - StringNotLike = {
+                              - aws:SourceVpc = [
+                                  - "vpc-bcdcd8db",
+                                  - "vpc-5748af2c",
+                                ]
+                              - aws:userId    = [
+                                  - "AROAYWZHC7VAWXIRWF2IX:*",
+                                  - "AROAYWZHC7VAUF3UQ4VUI:*",
+                                  - "AROAYWZHC7VAV5JV7M45W:*",
+                                  - "AROAYWZHC7VAZPKFHVW5P:*",
+                                  - "AROAJSTZ3VRQGD7PAOVJM:*",
+                                  - "AROAYWZHC7VAZGG6IVLF4:*",
+                                ]
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = "*"
+                      - Resource  = [
+                          - "arn:aws:s3:::datafabric-s3-pdfrb-5690",
+                          - "arn:aws:s3:::datafabric-s3-pdfrb-5690/*",
+                        ]
+                      - Sid       = "1"
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> (known after apply)
+        # (2 unchanged attributes hidden)
+    }
+
+  # module.dfs3.data.template_file.replica_bucket_policy[0] will be read during apply
+  # (config refers to values not yet known)
+ <= data "template_file" "replica_bucket_policy"  {
+      ~ id       = "1e9270f9f67adce970fd178f04eb1446c94ea4521b70b1be3181e5843ba5c922" -> (known after apply)
+      ~ rendered = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = "s3:PutObject"
+                      - Condition = {
+                          - StringNotEquals = {
+                              - s3:x-amz-server-side-encryption = "AES256"
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = "*"
+                      - Resource  = "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690/*"
+                      - Sid       = "DenyIncorrectEncryptionHeader"
+                    },
+                  - {
+                      - Action    = "s3:PutObject"
+                      - Condition = {
+                          - StringEquals = {
+                              - s3:x-amz-server-side-encryption = "true"
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = "*"
+                      - Resource  = "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690/*"
+                      - Sid       = "DenyUnEncryptedObjectUploads"
+                    },
+                  - {
+                      - Action    = "s3:*"
+                      - Condition = {
+                          - Bool = {
+                              - Aws:SecureTransport = "false"
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = "*"
+                      - Resource  = "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690/*"
+                      - Sid       = "DenyUnencryptedConnection"
+                    },
+                  - {
+                      - Action    = [
+                          - "s3:PutObject",
+                          - "s3:GetObject",
+                          - "s3:DeleteObject",
+                        ]
+                      - Condition = {
+                          - StringNotLike = {
+                              - aws:SourceVpc = [
+                                  - "vpc-bcdcd8db",
+                                  - "vpc-5748af2c",
+                                ]
+                              - aws:userId    = [
+                                  - "AROAYWZHC7VAWXIRWF2IX:*",
+                                  - "AROAYWZHC7VAUF3UQ4VUI:*",
+                                  - "AROAYWZHC7VAV5JV7M45W:*",
+                                  - "AROAYWZHC7VAZPKFHVW5P:*",
+                                  - "AROAJSTZ3VRQGD7PAOVJM:*",
+                                  - "AROAYWZHC7VAZGG6IVLF4:*",
+                                ]
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = "*"
+                      - Resource  = [
+                          - "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690",
+                          - "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690/*",
+                        ]
+                      - Sid       = "1"
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> (known after apply)
+        # (2 unchanged attributes hidden)
+    }
+
+  # module.dfs3.data.template_file.replica_log_bucket_policy[0] will be read during apply
+  # (config refers to values not yet known)
+ <= data "template_file" "replica_log_bucket_policy"  {
+      ~ id       = "a6d4f092e9e6e94796536ea1911bb857bf735d5d6d2663ff9ced497221bff151" -> (known after apply)
+      ~ rendered = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = "s3:*"
+                      - Condition = {
+                          - Bool = {
+                              - Aws:SecureTransport = "false"
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = {
+                          - AWS = "*"
+                        }
+                      - Resource  = [
+                          - "arn:aws:s3:::datafabric-s3-lr-pdfrb-5690/*",
+                          - "arn:aws:s3:::datafabric-s3-lr-pdfrb-5690",
+                        ]
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> (known after apply)
+        # (2 unchanged attributes hidden)
+    }
+
+  # module.dfs3.aws_s3_bucket.log_bucket[0] will be updated in-place
+  ~ resource "aws_s3_bucket" "log_bucket" {
+        id                          = "datafabric-s3-lg-pdfrb-5690"
+      ~ tags                        = {
+          + "athenahealth:consumerteam"          = ""
+          + "athenahealth:creator"               = ""
+          + "athenahealth:function"              = ""
+          + "athenahealth:product"               = ""
+          + "athenahealth:script_creator"        = ""
+          + "athenahealth:team"                  = ""
+          + "athenahealth:zone"                  = ""
+          + "deployment_id"                      = ""
+          + "scm_branch"                         = ""
+            # (9 unchanged elements hidden)
+        }
+      ~ tags_all                    = {
+          + "athenahealth:consumerteam"          = (known after apply)
+          + "athenahealth:creator"               = (known after apply)
+          + "athenahealth:function"              = (known after apply)
+          + "athenahealth:product"               = (known after apply)
+          + "athenahealth:script_creator"        = (known after apply)
+          + "athenahealth:team"                  = (known after apply)
+          + "athenahealth:zone"                  = (known after apply)
+          + "deployment_id"                      = (known after apply)
+          + "scm_branch"                         = (known after apply)
+            # (9 unchanged elements hidden)
+        }
+        # (10 unchanged attributes hidden)
+
+
+
+        # (4 unchanged blocks hidden)
+    }
+
+  # module.dfs3.aws_s3_bucket.primary_bucket[0] will be updated in-place
+  ~ resource "aws_s3_bucket" "primary_bucket" {
+        id                          = "datafabric-s3-pdfrb-5690"
+      ~ tags                        = {
+          + "athenahealth:consumerteam"          = ""
+          + "athenahealth:creator"               = ""
+          + "athenahealth:function"              = ""
+          + "athenahealth:product"               = ""
+          + "athenahealth:script_creator"        = ""
+          + "athenahealth:team"                  = ""
+          + "athenahealth:zone"                  = ""
+          + "deployment_id"                      = ""
+          + "scm_branch"                         = ""
+            # (9 unchanged elements hidden)
+        }
+      ~ tags_all                    = {
+          + "athenahealth:consumerteam"          = (known after apply)
+          + "athenahealth:creator"               = (known after apply)
+          + "athenahealth:function"              = (known after apply)
+          + "athenahealth:product"               = (known after apply)
+          + "athenahealth:script_creator"        = (known after apply)
+          + "athenahealth:team"                  = (known after apply)
+          + "athenahealth:zone"                  = (known after apply)
+          + "deployment_id"                      = (known after apply)
+          + "scm_branch"                         = (known after apply)
+            # (9 unchanged elements hidden)
+        }
+        # (10 unchanged attributes hidden)
+
+
+
+
+
+        # (5 unchanged blocks hidden)
+    }
+
+  # module.dfs3.aws_s3_bucket.replica_log_bucket[0] will be updated in-place
+  ~ resource "aws_s3_bucket" "replica_log_bucket" {
+        id                          = "datafabric-s3-lr-pdfrb-5690"
+      ~ tags                        = {
+          + "athenahealth:consumerteam"          = ""
+          + "athenahealth:creator"               = ""
+          + "athenahealth:function"              = ""
+          + "athenahealth:product"               = ""
+          + "athenahealth:script_creator"        = ""
+          + "athenahealth:team"                  = ""
+          + "athenahealth:zone"                  = ""
+          + "deployment_id"                      = ""
+          + "scm_branch"                         = ""
+            # (9 unchanged elements hidden)
+        }
+      ~ tags_all                    = {
+          + "athenahealth:consumerteam"          = (known after apply)
+          + "athenahealth:creator"               = (known after apply)
+          + "athenahealth:function"              = (known after apply)
+          + "athenahealth:product"               = (known after apply)
+          + "athenahealth:script_creator"        = (known after apply)
+          + "athenahealth:team"                  = (known after apply)
+          + "athenahealth:zone"                  = (known after apply)
+          + "deployment_id"                      = (known after apply)
+          + "scm_branch"                         = (known after apply)
+            # (9 unchanged elements hidden)
+        }
+        # (10 unchanged attributes hidden)
+
+
+
+        # (4 unchanged blocks hidden)
+    }
+
+  # module.dfs3.aws_s3_bucket.replication_destination[0] will be updated in-place
+  ~ resource "aws_s3_bucket" "replication_destination" {
+        id                          = "datafabric-s3-replica-pdfrb-5690"
+      ~ tags                        = {
+          + "athenahealth:consumerteam"          = ""
+          + "athenahealth:creator"               = ""
+          + "athenahealth:function"              = ""
+          + "athenahealth:product"               = ""
+          + "athenahealth:script_creator"        = ""
+          + "athenahealth:team"                  = ""
+          + "athenahealth:zone"                  = ""
+          + "deployment_id"                      = ""
+          + "scm_branch"                         = ""
+            # (9 unchanged elements hidden)
+        }
+      ~ tags_all                    = {
+          + "athenahealth:consumerteam"          = (known after apply)
+          + "athenahealth:creator"               = (known after apply)
+          + "athenahealth:function"              = (known after apply)
+          + "athenahealth:product"               = (known after apply)
+          + "athenahealth:script_creator"        = (known after apply)
+          + "athenahealth:team"                  = (known after apply)
+          + "athenahealth:zone"                  = (known after apply)
+          + "deployment_id"                      = (known after apply)
+          + "scm_branch"                         = (known after apply)
+            # (9 unchanged elements hidden)
+        }
+        # (10 unchanged attributes hidden)
+
+
+
+
+
+        # (5 unchanged blocks hidden)
+    }
+
+  # module.dfs3.aws_s3_bucket_policy.bucket_policy_primary[0] will be updated in-place
+  ~ resource "aws_s3_bucket_policy" "bucket_policy_primary" {
+        id     = "datafabric-s3-pdfrb-5690"
+      ~ policy = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = "s3:PutObject"
+                      - Condition = {
+                          - StringNotEquals = {
+                              - s3:x-amz-server-side-encryption = "AES256"
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = "*"
+                      - Resource  = "arn:aws:s3:::datafabric-s3-pdfrb-5690/*"
+                      - Sid       = "DenyIncorrectEncryptionHeader"
+                    },
+                  - {
+                      - Action    = "s3:PutObject"
+                      - Condition = {
+                          - StringEquals = {
+                              - s3:x-amz-server-side-encryption = "true"
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = "*"
+                      - Resource  = "arn:aws:s3:::datafabric-s3-pdfrb-5690/*"
+                      - Sid       = "DenyUnEncryptedObjectUploads"
+                    },
+                  - {
+                      - Action    = "s3:*"
+                      - Condition = {
+                          - Bool = {
+                              - Aws:SecureTransport = "false"
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = "*"
+                      - Resource  = "arn:aws:s3:::datafabric-s3-pdfrb-5690/*"
+                      - Sid       = "DenyUnencryptedConnection"
+                    },
+                  - {
+                      - Action    = [
+                          - "s3:PutObject",
+                          - "s3:GetObject",
+                          - "s3:DeleteObject",
+                        ]
+                      - Condition = {
+                          - StringNotLike = {
+                              - aws:SourceVpc = [
+                                  - "vpc-bcdcd8db",
+                                  - "vpc-5748af2c",
+                                ]
+                              - aws:userId    = [
+                                  - "AROAYWZHC7VAWXIRWF2IX:*",
+                                  - "AROAYWZHC7VAUF3UQ4VUI:*",
+                                  - "AROAYWZHC7VAV5JV7M45W:*",
+                                  - "AROAYWZHC7VAZPKFHVW5P:*",
+                                  - "AROAJSTZ3VRQGD7PAOVJM:*",
+                                  - "AROAYWZHC7VAZGG6IVLF4:*",
+                                ]
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = "*"
+                      - Resource  = [
+                          - "arn:aws:s3:::datafabric-s3-pdfrb-5690",
+                          - "arn:aws:s3:::datafabric-s3-pdfrb-5690/*",
+                        ]
+                      - Sid       = "1"
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> (known after apply)
+        # (1 unchanged attribute hidden)
+    }
+
+  # module.dfs3.aws_s3_bucket_policy.bucket_policy_replica[0] will be updated in-place
+  ~ resource "aws_s3_bucket_policy" "bucket_policy_replica" {
+        id     = "datafabric-s3-replica-pdfrb-5690"
+      ~ policy = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = "s3:PutObject"
+                      - Condition = {
+                          - StringNotEquals = {
+                              - s3:x-amz-server-side-encryption = "AES256"
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = "*"
+                      - Resource  = "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690/*"
+                      - Sid       = "DenyIncorrectEncryptionHeader"
+                    },
+                  - {
+                      - Action    = "s3:PutObject"
+                      - Condition = {
+                          - StringEquals = {
+                              - s3:x-amz-server-side-encryption = "true"
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = "*"
+                      - Resource  = "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690/*"
+                      - Sid       = "DenyUnEncryptedObjectUploads"
+                    },
+                  - {
+                      - Action    = "s3:*"
+                      - Condition = {
+                          - Bool = {
+                              - Aws:SecureTransport = "false"
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = "*"
+                      - Resource  = "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690/*"
+                      - Sid       = "DenyUnencryptedConnection"
+                    },
+                  - {
+                      - Action    = [
+                          - "s3:PutObject",
+                          - "s3:GetObject",
+                          - "s3:DeleteObject",
+                        ]
+                      - Condition = {
+                          - StringNotLike = {
+                              - aws:SourceVpc = [
+                                  - "vpc-bcdcd8db",
+                                  - "vpc-5748af2c",
+                                ]
+                              - aws:userId    = [
+                                  - "AROAYWZHC7VAWXIRWF2IX:*",
+                                  - "AROAYWZHC7VAUF3UQ4VUI:*",
+                                  - "AROAYWZHC7VAV5JV7M45W:*",
+                                  - "AROAYWZHC7VAZPKFHVW5P:*",
+                                  - "AROAJSTZ3VRQGD7PAOVJM:*",
+                                  - "AROAYWZHC7VAZGG6IVLF4:*",
+                                ]
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = "*"
+                      - Resource  = [
+                          - "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690",
+                          - "arn:aws:s3:::datafabric-s3-replica-pdfrb-5690/*",
+                        ]
+                      - Sid       = "1"
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> (known after apply)
+        # (1 unchanged attribute hidden)
+    }
+
+  # module.dfs3.aws_s3_bucket_policy.primary_log_bucket_policy_json[0] will be updated in-place
+  ~ resource "aws_s3_bucket_policy" "primary_log_bucket_policy_json" {
+        id     = "datafabric-s3-lg-pdfrb-5690"
+      ~ policy = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = "s3:*"
+                      - Condition = {
+                          - Bool = {
+                              - Aws:SecureTransport = "false"
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = {
+                          - AWS = "*"
+                        }
+                      - Resource  = [
+                          - "arn:aws:s3:::datafabric-s3-lg-pdfrb-5690/*",
+                          - "arn:aws:s3:::datafabric-s3-lg-pdfrb-5690",
+                        ]
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> (known after apply)
+        # (1 unchanged attribute hidden)
+    }
+
+  # module.dfs3.aws_s3_bucket_policy.replica_log_bucket_policy_json[0] will be updated in-place
+  ~ resource "aws_s3_bucket_policy" "replica_log_bucket_policy_json" {
+        id     = "datafabric-s3-lr-pdfrb-5690"
+      ~ policy = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = "s3:*"
+                      - Condition = {
+                          - Bool = {
+                              - Aws:SecureTransport = "false"
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = {
+                          - AWS = "*"
+                        }
+                      - Resource  = [
+                          - "arn:aws:s3:::datafabric-s3-lr-pdfrb-5690/*",
+                          - "arn:aws:s3:::datafabric-s3-lr-pdfrb-5690",
+                        ]
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> (known after apply)
+        # (1 unchanged attribute hidden)
+    }
+
+Plan: 0 to add, 8 to change, 0 to destroy.
+module.dfs3.aws_s3_bucket.log_bucket[0]: Modifying... [id=datafabric-s3-lg-pdfrb-5690]
+module.dfs3.aws_s3_bucket.primary_bucket[0]: Modifying... [id=datafabric-s3-pdfrb-5690]
+module.dfs3.aws_s3_bucket.replica_log_bucket[0]: Modifying... [id=datafabric-s3-lr-pdfrb-5690]
+module.dfs3.aws_s3_bucket.replication_destination[0]: Modifying... [id=datafabric-s3-replica-pdfrb-5690]
+module.dfs3.aws_s3_bucket.log_bucket[0]: Modifications complete after 0s [id=datafabric-s3-lg-pdfrb-5690]
+module.dfs3.data.template_file.log_bucket_policy[0]: Reading... [id=689c05a6ea2234a48d9262b5f083671f2b729b5a74a27f35810598492a8f631a]
+module.dfs3.data.template_file.log_bucket_policy[0]: Read complete after 0s [id=689c05a6ea2234a48d9262b5f083671f2b729b5a74a27f35810598492a8f631a]
+module.dfs3.aws_s3_bucket.replica_log_bucket[0]: Modifications complete after 2s [id=datafabric-s3-lr-pdfrb-5690]
+module.dfs3.data.template_file.replica_log_bucket_policy[0]: Reading... [id=a6d4f092e9e6e94796536ea1911bb857bf735d5d6d2663ff9ced497221bff151]
+module.dfs3.data.template_file.replica_log_bucket_policy[0]: Read complete after 0s [id=a6d4f092e9e6e94796536ea1911bb857bf735d5d6d2663ff9ced497221bff151]
+Error: error updating S3 Bucket (datafabric-s3-pdfrb-5690) Replication configuration: InvalidRequest: SourceSelectionCriteria cannot be empty.
+status code: 400, request id: 1QPPZN54XN0WQ1KZ, host id: oJrUMwvttA0IzIALRbDSYM2zLd4WZ2KlspT2+IkPavGNJDj3+U/UCCItf7THGc1VNLuMi+Kt+yM=
+│ 
+│   with module.dfs3.aws_s3_bucket.primary_bucket[0],
+│   on .terraform/modules/dfs3/main.tf line 9, in resource "aws_s3_bucket" "primary_bucket":
+│    9: resource "aws_s3_bucket" "primary_bucket" {
+│ 
+╵
+Error: error updating S3 Bucket (datafabric-s3-replica-pdfrb-5690) Replication configuration: InvalidRequest: SourceSelectionCriteria cannot be empty.
+status code: 400, request id: XP9BSKR60MSN5EVH, host id: 7F4UVz12+dqTay5889Jo1UXQKTGl25envzzIySgrP9L839bkhIzB2n291hHGF46SDKF2NJfcKMg=
+│ 
+│   with module.dfs3.aws_s3_bucket.replication_destination[0],
+│   on .terraform/modules/dfs3/main.tf line 524, in resource "aws_s3_bucket" "replication_destination":
+│  524: resource "aws_s3_bucket" "replication_destination" {
+│ 
+╵
